@@ -11,13 +11,14 @@
 
 using namespace std;
 
-void add();
+void add(Node* head);
 void print();
 void myDelete();
 void average();
 void help();
 
 int main() {
+  Node* head = NULL;
   char input[7];
   bool running = true;
 
@@ -29,7 +30,7 @@ int main() {
     cin >> input;
 
     if (input[1] == 'D' || input[1] == 'd') { // adds student
-      add();
+      add(head);
     }
     else if (input[1] == 'R' || input[1] == 'r') { // prints all students inputted
       print();
@@ -54,21 +55,57 @@ int main() {
   return 0;
 }
 
-// adds new student to the studentList vector
-void add() {
+// adds new student
+void add(Node* head) {
+  char firstName[20];
+  char lastName[20];
+  float gpa;
+  int studentID;
+  Student* newStudent = new Student();
+  
+  cout << "First Name: " << endl;
+  cin.get(firstName, 20);
+  cin.get();
+  newStudent->set_first_name(firstName);
 
+  cout << "Last Name: " << endl;
+  cin.get(lastName, 20);
+  cin.get();
+  newStudent->set_last_name(lastName);
+
+  cout << "GPA: " << endl;
+  cin >> gpa;
+  newStudent->set_gpa(gpa);
+
+  cout << "Student ID: " << endl;
+  cin >> studentID;
+  newStudent->set_id(studentID);
+  Node* newNode = new Node(newStudent);
+
+  if (head == NULL) {
+    head = newNode;
+  }
+  else {
+    while (head->getNext() != NULL) {
+      if (newNode->getStudent()->get_id() > head->getNext()->getStudent()->get_id()) {
+        head->setNext(newNode);
+        newNode->setNext(head->getNext()->getNext());
+      }
+    }
+  }
 }
 
-// prints all students in vector on seperate lines
+// prints all students on seperate lines
 void print() {
 
 }
 
-// deletes a student from vector
+// deletes a student
 void myDelete() {
 
 }
 
+// averages all the gpas of the students then prints them
 void average() {
 
 }

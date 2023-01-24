@@ -16,7 +16,7 @@ void Student::set_gpa(float gpatemp) {
   gpa = gpatemp;
 }
 
-void Student::set_student_id(int studentIDTemp) {
+void Student::set_id(int studentIDTemp) {
   studentID = studentIDTemp;
 }
 
@@ -32,6 +32,6 @@ float Student::get_gpa() {
   return gpa;
 }
 
-int Student::get_student_id() {
+int Student::get_id() {
   return studentID;
 }
