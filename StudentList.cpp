@@ -2,7 +2,7 @@
  * Author: Armaan Hajar
  * Program: A student list creator that inputs the students first name, last name, gpa, and 
  *          student ID to add it to a vector
- * Date: 10/11/2022
+ * Date: 
  */
 
 #include <iostream>
