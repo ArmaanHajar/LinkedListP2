@@ -37,6 +37,10 @@ Node* Node::getNext()
   return myNode;
 }
 
+Student* Node::getStudent() {
+  return this->myStudent;
+}
+
 void Node::setNext(Node* myNode)
 {
   //setting the next node pointer to the myNode pointer

@@ -7,7 +7,7 @@ using namespace std;
 
 class Student {
  public:
-  Student(char*, char*, int, float);
+  Student(char*, char*, float, int);
   void set_first_name(char*);
   void set_last_name(char*);
   void set_gpa(float);

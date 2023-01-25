@@ -1,7 +1,6 @@
 /*
  * Author: Armaan Hajar
- * Program: A student list creator that inputs the students first name, last name, gpa, and 
- *          student ID to add it to a vector
+ * Program: A student list creator that inputs the students first name, last name, gpa, and student ID to add it to a vector
  * Date: 
  */
 
@@ -28,10 +27,12 @@ int main() {
     cout << "---------------------------------------------------------" << endl;
     cout << "What Would You Like To Do? (ADD/PRINT/DELETE/AVERAGE/QUIT/HELP)" << endl;
 
-    cin >> input;
+    cin.get(input, 7);
+    cin.get();
 
     if (input[1] == 'D' || input[1] == 'd') { // adds student
       add(head);
+      cout << "test" << endl;
     }
     else if (input[1] == 'R' || input[1] == 'r') { // prints all students inputted
       print(head);
@@ -114,11 +115,16 @@ void myDelete(Node* head) {
   cout << "What Is The Student ID Of The Student You Want To Delete?" << endl;
   cin >> id;
 
-  while (head->getNext() != NULL) {
-    if (head->getNext()->getStudent()->get_id() == id) {
-      head->setNext(head->getNext()->getNext());
+  Node* current = head;
+
+  while (current->getNext() != NULL) {
+    if (current->getNext()->getStudent()->get_id() == id) {
+      current->setNext = current->getNext()->getNext();
+      delete current->next;
     }
-    head = head->getNext();
+    else {
+      current = current->getNext();
+    }
   }
 }
 
