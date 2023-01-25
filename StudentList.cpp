@@ -6,15 +6,16 @@
  */
 
 #include <iostream>
+#include <cstring>
 #include "Student.h"
 #include "Node.h"
 
 using namespace std;
 
 void add(Node* head);
-void print();
-void myDelete();
-void average();
+void print(Node* head);
+void myDelete(Node* head);
+void average(Node* head);
 void help();
 
 int main() {
@@ -33,13 +34,13 @@ int main() {
       add(head);
     }
     else if (input[1] == 'R' || input[1] == 'r') { // prints all students inputted
-      print();
+      print(head);
     }
     else if (input[1] == 'E' || input[1] == 'e') { // deletes a student
-      myDelete();
+      myDelete(head);
     }
     else if (input[1] == 'V' || input[1] == 'v') { // averages gpas
-      average();
+      average(head);
     }
     else if (input[0] == 'Q' || input[0] == 'q') { // ends program
       cout << "Thank You For Using the Student List Maker!" << endl;
@@ -61,7 +62,7 @@ void add(Node* head) {
   char lastName[20];
   float gpa;
   int studentID;
-  Student* newStudent = new Student();
+  Student* newStudent = new Student(firstName, lastName, gpa, studentID);
   
   cout << "First Name: " << endl;
   cin.get(firstName, 20);
@@ -96,18 +97,39 @@ void add(Node* head) {
 }
 
 // prints all students on seperate lines
-void print() {
-
+void print(Node* head) {
+  while (head->getNext() != NULL) {
+    cout << "---------------------------------------------------------" << endl;
+    cout << "First Name: " << head->getStudent()->get_first_name() << endl;
+    cout << "Last Name: " << head->getStudent()->get_last_name() << endl;
+    cout << "GPA: " << head->getStudent()->get_gpa() << endl;
+    cout << "Student ID: " << head->getStudent()->get_id() << endl;
+    head = head->getNext();
+  }
 }
 
 // deletes a student
-void myDelete() {
+void myDelete(Node* head) {
+  int id;
+  cout << "What Is The Student ID Of The Student You Want To Delete?" << endl;
+  cin >> id;
 
+  while (head->getNext() != NULL) {
+    if (head->getNext()->getStudent()->get_id() == id) {
+      head->setNext(head->getNext()->getNext());
+    }
+    head = head->getNext();
+  }
 }
 
 // averages all the gpas of the students then prints them
-void average() {
-
+void average(Node* head) {
+  int total = 0;
+  while (head->getNext() != NULL) {
+    total += head->getStudent()->get_gpa();
+    head = head->getNext();
+  }
+  cout << "The Average GPA Of All Students Is: " << total / head->getStudent()->get_id() << endl;
 }
 
 // describes what each input does

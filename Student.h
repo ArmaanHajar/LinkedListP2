@@ -1,11 +1,11 @@
-#ifndef STUDENT
-#define STUDENT
+#pragma once
 #include <iostream>
 
 using namespace std;
 
 class Student {
  public:
+  Student(char*, char*, int, float);
   void set_first_name(char*);
   void set_last_name(char*);
   void set_gpa(float);
@@ -20,5 +20,3 @@ class Student {
   float gpa;
   int studentID;
 };
-
-#endif

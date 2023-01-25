@@ -4,6 +4,13 @@
 
 using namespace std;
 
+Student::Student(char* firstName, char* lastName, float gpa, int studentID) {
+  strncpy(this->firstName, firstName, 19);
+  strncpy(this->lastName, lastName, 19);
+  this->gpa = gpa;
+  this->studentID = studentID;
+}
+
 void Student::set_first_name(char* firstNameTemp) {
   strncpy(firstName, firstNameTemp, 19);
 }
