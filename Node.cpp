@@ -1,6 +1,6 @@
 //Written by Eric Chen
 //Date: 1/6/2023
-//This is the cpp file of the Node class
+//This is the cpp file of the Node class 
 
 #include <iostream>
 #include <cstring>
