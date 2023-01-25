@@ -15,9 +15,9 @@ class Node{
  public:
   Node(Student* myStudent);//constructor
   ~Node();//destructor
-  virtual Node* getNext();//return a pointer to the next node
+  Node* getNext();//return a pointer to the next node
   Student* getStudent();//returns a pointer to the student stored
-  virtual void setNext(Node* myNode);//setting the next pointer
+  void setNext(Node* myNode);//setting the next pointer
 
  private:
   Student* myStudent;

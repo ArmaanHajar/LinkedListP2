@@ -22,7 +22,7 @@ int main() {
   char input[7];
   bool running = true;
 
-  // main code, running will stay true unti luser says "QUIT"
+  // main code, running will stay true until user says "QUIT"
   while (running == true) {
     cout << "---------------------------------------------------------" << endl;
     cout << "What Would You Like To Do? (ADD/PRINT/DELETE/AVERAGE/QUIT/HELP)" << endl;
@@ -47,16 +47,16 @@ int main() {
       cout << "Thank You For Using the Student List Maker!" << endl;
       running = false;
     }
-    else if (strcmp(input, "HELP") == 0) { // prints what each input does
+    else if (input[0] == 'H' || input[0] == 'h') {
       help();
     }
-    else { // if user doesn't typ add, print, delete, or quit
+    else {
       cout << "Not Sure What You're Trying To Do" << endl;
     }
   }  
   return 0;
 }
-
+  
 // adds new student
 void add(Node* head) {
   char firstName[20];
@@ -119,8 +119,8 @@ void myDelete(Node* head) {
 
   while (current->getNext() != NULL) {
     if (current->getNext()->getStudent()->get_id() == id) {
-      current->setNext = current->getNext()->getNext();
-      delete current->next;
+      current->setNext(current->getNext()->getNext());
+      delete current->getNext();
     }
     else {
       current = current->getNext();
