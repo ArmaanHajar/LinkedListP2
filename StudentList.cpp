@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void add(Node* head);
+void add(Node* current, Node* &head);
 void print(Node* head);
 void myDelete(Node* head);
 void average(Node* head);
@@ -19,25 +19,25 @@ void help();
 
 int main() {
   Node* head = NULL;
-  char input[7];
+  Node* current = NULL;
+  char input[10];
   bool running = true;
 
   // main code, running will stay true until user says "QUIT"
   while (running == true) {
-    cout << "---------------------------------------------------------" << endl;
+    cout << "---------------------------------------------------------------" << endl;
     cout << "What Would You Like To Do? (ADD/PRINT/DELETE/AVERAGE/QUIT/HELP)" << endl;
 
-    cin.get(input, 7);
-    cin.get();
+    cin.get(input, 10);
+    cin.ignore(1, '\n');
 
     if (input[1] == 'D' || input[1] == 'd') { // adds student
-      add(head);
-      cout << "test" << endl;
+      add(current, head);
     }
     else if (input[1] == 'R' || input[1] == 'r') { // prints all students inputted
       print(head);
     }
-    else if (input[1] == 'E' || input[1] == 'e') { // deletes a student
+    else if (input[2] == 'L' || input[2] == 'l') { // deletes a student
       myDelete(head);
     }
     else if (input[1] == 'V' || input[1] == 'v') { // averages gpas
@@ -58,7 +58,7 @@ int main() {
 }
   
 // adds new student
-void add(Node* head) {
+void add(Node* current, Node* &head) {
   char firstName[20];
   char lastName[20];
   float gpa;
@@ -67,53 +67,80 @@ void add(Node* head) {
   
   cout << "First Name: " << endl;
   cin.get(firstName, 20);
-  cin.get();
+  cin.ignore(1, '\n');
   newStudent->set_first_name(firstName);
 
   cout << "Last Name: " << endl;
   cin.get(lastName, 20);
-  cin.get();
+  cin.ignore(1, '\n');
   newStudent->set_last_name(lastName);
 
   cout << "GPA: " << endl;
   cin >> gpa;
+  cin.ignore(1, '\n');
   newStudent->set_gpa(gpa);
 
   cout << "Student ID: " << endl;
   cin >> studentID;
+  cin.ignore(1, '\n');
   newStudent->set_id(studentID);
+
   Node* newNode = new Node(newStudent);
 
-  if (head == NULL) {
+  if (head == NULL) { // no nodes already in list
     head = newNode;
+    newNode->setNext(NULL);
+    cout << "new head" << endl;
+  }
+  else if (newNode->getStudent()->get_id() < head->getStudent()->get_id()) { // new node is smaller than head
+    head = newNode;
+    newNode->setNext(head);
+    cout << "put before existing head" << endl;
   }
   else {
-    while (head->getNext() != NULL) {
-      if (newNode->getStudent()->get_id() > head->getNext()->getStudent()->get_id()) {
-        head->setNext(newNode);
-        newNode->setNext(head->getNext()->getNext());
+    if (current->getNext() != NULL) { // if not at end of list
+      if (newNode->getStudent()->get_id() >= current->getNext()->getStudent()->get_id()) { // if new node is greater than the node after current
+        current = current->getNext();
+        add(current, newNode);
+        cout << "node is greater than current" << endl;
       }
+      else { // if new node is smaller than the node after current
+        Node* temp = current->getNext();
+        current->setNext(newNode);
+        newNode->setNext(temp);
+        cout << "node is smaller than current" << endl;
+      }
+    }
+    else if (newNode->getStudent()->get_id() >= current->getStudent()->get_id()) { // if new node is greater or equal to the current node
+        Node* temp = current->getNext();
+        current->setNext(newNode);
+        newNode->setNext(temp);
+        cout << "node is greater or equal to current" << endl;
     }
   }
 }
 
 // prints all students on seperate lines
 void print(Node* head) {
-  while (head->getNext() != NULL) {
-    cout << "---------------------------------------------------------" << endl;
+  Node* current = head;
+  while (current != NULL) {
+    cout << "---------------------------------------------------------------" << endl;
     cout << "First Name: " << head->getStudent()->get_first_name() << endl;
     cout << "Last Name: " << head->getStudent()->get_last_name() << endl;
     cout << "GPA: " << head->getStudent()->get_gpa() << endl;
     cout << "Student ID: " << head->getStudent()->get_id() << endl;
-    head = head->getNext();
+    current = current->getNext();
   }
 }
 
 // deletes a student
 void myDelete(Node* head) {
+  bool deleted = false;
   int id;
+
   cout << "What Is The Student ID Of The Student You Want To Delete?" << endl;
   cin >> id;
+  cin.ignore(1, '\n');
 
   Node* current = head;
 
@@ -121,21 +148,28 @@ void myDelete(Node* head) {
     if (current->getNext()->getStudent()->get_id() == id) {
       current->setNext(current->getNext()->getNext());
       delete current->getNext();
+      cout << "Student Successfully Deleted" << endl;
+      deleted = true;
     }
     else {
       current = current->getNext();
     }
+  }
+  if (deleted == false) {
+    cout << "Student Was Not Found" << endl;
   }
 }
 
 // averages all the gpas of the students then prints them
 void average(Node* head) {
   int total = 0;
+  int numOfStudents = 0;
   while (head->getNext() != NULL) {
     total += head->getStudent()->get_gpa();
+    numOfStudents++;
     head = head->getNext();
   }
-  cout << "The Average GPA Of All Students Is: " << total / head->getStudent()->get_id() << endl;
+  cout << "The Average GPA Of All Students Is: " << total / numOfStudents << endl;
 }
 
 // describes what each input does

@@ -1,6 +1,6 @@
 //Written by Eric Chen
 //Date: 1/6/2023
-//This is the cpp file of the Node class 
+//This is the cpp file of the Node class
 
 #include <iostream>
 #include <cstring>
@@ -28,7 +28,7 @@ Node::Node(Student* myStudent)
 
 Node::~Node()
 {
-
+  
 }
 
 Node* Node::getNext()
@@ -37,8 +37,10 @@ Node* Node::getNext()
   return myNode;
 }
 
-Student* Node::getStudent() {
-  return this->myStudent;
+Student* Node::getStudent()
+{
+  //return a pointer of the student stored
+  return myStudent;
 }
 
 void Node::setNext(Node* myNode)
