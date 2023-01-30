@@ -1,20 +1,21 @@
 /*
  * Author: Armaan Hajar
- * Program: A student list creator that inputs the students first name, last name, gpa, and student ID to add it to a vector
- * Date: 
+ * Program: A student list creator that uses a linked list to add all the students
+ * Date: 1/29/2023
  */
 
 #include <iostream>
 #include <cstring>
+#include <cstdio>
 #include "Student.h"
 #include "Node.h"
 
 using namespace std;
 
-void add(Node* &head, Node* newNode);
+void add(Node* head, Node* newNode);
 void print(Node* head);
-void myDelete(Node* head);
-void average(Node* head);
+void myDelete(int id, Node* head);
+void average(float total, int numOfStudents, Node* head);
 void help();
 
 int main() {
@@ -33,48 +34,75 @@ int main() {
     if (input[1] == 'D' || input[1] == 'd') { // adds student
       char firstName[20];
       char lastName[20];
-      float gpa;
-      int studentID;
-      Student* newStudent = new Student(firstName, lastName, gpa, studentID);
+      int studentID = 0;
+      float gpa = 0.0;
+      Student* newStudent = new Student(firstName, lastName, studentID, gpa);
       
+      // read in first name
       cout << "First Name: " << endl;
       cin.get(firstName, 20);
       cin.ignore(1, '\n');
       newStudent->set_first_name(firstName);
 
+      // read in last name
       cout << "Last Name: " << endl;
       cin.get(lastName, 20);
       cin.ignore(1, '\n');
       newStudent->set_last_name(lastName);
 
-      cout << "GPA: " << endl;
-      cin >> gpa;
-      cin.ignore(1, '\n');
-      newStudent->set_gpa(gpa);
-
+      // read in student id
       cout << "Student ID: " << endl;
       cin >> studentID;
-      cin.ignore(1, '\n');
+      cin.ignore();
       newStudent->set_id(studentID);
+
+      // read in gpa
+      cout << "GPA: " << endl;
+      cin >> gpa;
+      cin.ignore();
+      newStudent->set_gpa(gpa);
 
       Node* newNode = new Node(newStudent);
 
-      add(head, newNode);
+      if (head == NULL) { // no nodes already in list
+        head = newNode;
+        newNode->setNext(NULL);
+      }
+      else if (newNode->getStudent()->get_id() < head->getStudent()->get_id()) { // new node is smaller than head
+        newNode->setNext(head);
+        head = newNode;
+      }
+      else {
+        add(head, newNode);
+      }
     }
     else if (input[1] == 'R' || input[1] == 'r') { // prints all students inputted
       print(head);
     }
     else if (input[2] == 'L' || input[2] == 'l') { // deletes a student
-      myDelete(head);
+      int id;
+
+      // read in id
+      cout << "What Is The Student ID Of The Student You Want To Delete?" << endl;
+      cin >> id;
+      cin.ignore(1, '\n');
+
+      myDelete(id, head);
     }
     else if (input[1] == 'V' || input[1] == 'v') { // averages gpas
-      average(head);
+      float total = 0.0;
+      int numOfStudents = 0;
+
+      // adds gpa of head
+      total += head->getStudent()->get_gpa();
+      numOfStudents++;
+      average(total, numOfStudents, head);
     }
     else if (input[0] == 'Q' || input[0] == 'q') { // ends program
       cout << "Thank You For Using the Student List Maker!" << endl;
       running = false;
     }
-    else if (input[0] == 'H' || input[0] == 'h') {
+    else if (input[0] == 'H' || input[0] == 'h') { // prints help message
       help();
     }
     else {
@@ -85,35 +113,21 @@ int main() {
 }
   
 // adds new student
-void add(Node* &head, Node* newNode) {
-  if (head == NULL) { // no nodes already in list
-    head = newNode;
+void add(Node* head, Node* newNode) {
+  if (head->getNext() != NULL) { // if not at end of list
+    if (newNode->getStudent()->get_id() >= head->getNext()->getStudent()->get_id()) { // if id of new node is greater than or equal to id of the current node
+      head = head->getNext();
+      add(head, newNode);
+    }
+    else { // if id of new node is less than id of the current node
+      Node* temp = head->getNext();
+      head->setNext(newNode);
+      newNode->setNext(temp);
+    }
+  }
+  else { // at end of list
+    head->setNext(newNode);
     newNode->setNext(NULL);
-    cout << "new head" << endl;
-  }
-  else if (newNode->getStudent()->get_id() < head->getStudent()->get_id()) { // new node is smaller than head
-    newNode->setNext(head);
-    head = newNode;
-    cout << "put before existing head" << endl;
-  }
-  else {
-    Node* current = head;
-    if (current->getNext() != NULL) {//one or more node IN FRONT of n
-      if (newNode->getStudent()->get_id() >= current->getNext()->getStudent()->get_id()) {
-        current = current->getNext();
-        add(head, newNode);
-      }
-      else {
-        Node* temp = current->getNext();
-        current->setNext(newNode);
-        newNode->setNext(temp);
-      }
-    }
-    else {//there is only one node from the beginning/ went through all existing nodes and there is only last one left to compare
-      current->setNext(newNode);
-      newNode->setNext(NULL);
-      cout << "added node at end of list" << endl;
-    }
   }
 }
 
@@ -124,53 +138,54 @@ void print(Node* head) {
     cout << "---------------------------------------------------------------" << endl;
     cout << "First Name: " << current->getStudent()->get_first_name() << endl;
     cout << "Last Name: " << current->getStudent()->get_last_name() << endl;
-    cout << "GPA: " << current->getStudent()->get_gpa() << endl;
     cout << "Student ID: " << current->getStudent()->get_id() << endl;
+    cout << "GPA: " << current->getStudent()->get_gpa() << endl;
     current = current->getNext();
     print(current);
-  }
-  else {
-    cout << "end of list" << endl;
   }
 }
 
 // deletes a student
-void myDelete(Node* head) {
+void myDelete(int id, Node* head) {
   bool deleted = false;
-  int id;
+  if (id == head->getStudent()->get_id()) { // if user wants to delete head node
+    Node* temp = head;
+    head = head->getNext();
+    delete temp;
+    deleted = true;
+    cout << "Student Successfully Deleted" << endl;
+  }
+  else if (id == head->getNext()->getStudent()->get_id()) { // deleting any other node
+    Node* temp = head->getNext();
+    head->setNext(head->getNext()->getNext());
+    delete temp;
+    deleted = true;
+    cout << "Student Successfully Deleted" << endl;
+  }
+  else { // inputted id isn't equal to id of current node
+    head = head->getNext();
+    myDelete(id, head);
+  }
 
-  cout << "What Is The Student ID Of The Student You Want To Delete?" << endl;
-  cin >> id;
-  cin.ignore(1, '\n');
-
-  Node* current = head;
-
-  if (id == current->getNext()->getStudent()->get_id()) {//if NEXT node is equal
-        Node* temp = current->getNext();
-        current->setNext(current->getNext()->getNext());
-        delete temp;
-        deleted = true;
-    }
-    else {
-        current = current->getNext();
-        myDelete(head);
-    }
-
-  if (deleted == false) {
+  if (deleted == false) { // id was not found in list
     cout << "Student Was Not Found" << endl;
   }
 }
 
 // averages all the gpas of the students then prints them
-void average(Node* head) {
-  int total = 0;
-  int numOfStudents = 0;
-  while (head->getNext() != NULL) {
-    total += head->getStudent()->get_gpa();
-    numOfStudents++;
+void average(float total, int numOfStudents, Node* head) {
+  if (head->getNext() != NULL) { // adds all gpas together
     head = head->getNext();
+    total = total + head->getStudent()->get_gpa();
+    numOfStudents++;
+    average(total, numOfStudents, head);
   }
-  cout << "The Average GPA Of All Students Is: " << total / numOfStudents << endl;
+  else { // averages all gpas and rounds it to 2 decimal places
+    float printGPA = total / numOfStudents;
+    cout << "The Average GPA Of All Students Is: ";
+    printf("%.2f", printGPA);
+    cout << endl;
+  }
 }
 
 // describes what each input does

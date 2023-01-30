@@ -1,4 +1,8 @@
-// Student.h
+/*
+ * Author: Armaan Hajar
+ * Program: Student.h file
+ * Date: 1/29/2023
+ */
 
 #pragma once
 #include <iostream>
@@ -7,18 +11,18 @@ using namespace std;
 
 class Student {
  public:
-  Student(char*, char*, float, int);
+  Student(char*, char*, int, float);
   void set_first_name(char*);
   void set_last_name(char*);
-  void set_gpa(float);
   void set_id(int);
+  void set_gpa(float);
   char* get_first_name();
   char* get_last_name();
-  float get_gpa();
   int get_id();
+  float get_gpa();
 
   char firstName[20];
   char lastName[20];
-  float gpa;
   int studentID;
+  float gpa;
 };

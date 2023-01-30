@@ -1,32 +1,35 @@
-// Student.cpp
-
+/*
+ * Author: Armaan Hajar
+ * Program: Student.cpp file
+ * Date: 1/29/2023
+ */
 #include <iostream>
 #include "Student.h"
 #include <cstring>
 
 using namespace std;
 
-Student::Student(char* firstName, char* lastName, float gpa, int studentID) {
+Student::Student(char* firstName, char* lastName, int studentID, float gpa) {
   strncpy(this->firstName, firstName, 19);
   strncpy(this->lastName, lastName, 19);
-  this->gpa = gpa;
   this->studentID = studentID;
+  this->gpa = gpa;
 }
 
 void Student::set_first_name(char* firstNameTemp) {
-  strncpy(firstName, firstNameTemp, 19);
+  strcpy(firstName, firstNameTemp);
 }
 
 void Student::set_last_name(char* lastNameTemp) {
-  strncpy(lastName, lastNameTemp, 19);
-}
-
-void Student::set_gpa(float gpatemp) {
-  gpa = gpatemp;
+  strcpy(lastName, lastNameTemp);
 }
 
 void Student::set_id(int studentIDTemp) {
   studentID = studentIDTemp;
+}
+
+void Student::set_gpa(float gpatemp) {
+  gpa = gpatemp;
 }
 
 char* Student::get_first_name() {
@@ -37,10 +40,10 @@ char* Student::get_last_name() {
   return lastName;
 }
 
-float Student::get_gpa() {
-  return gpa;
-}
-
 int Student::get_id() {
   return studentID;
+}
+
+float Student::get_gpa() {
+  return gpa;
 }
